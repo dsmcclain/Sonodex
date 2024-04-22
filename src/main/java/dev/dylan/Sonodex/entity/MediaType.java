@@ -4,5 +4,6 @@ public enum MediaType {
     OGG,
     MP3,
     FLAC,
-    WAV
+    WAV,
+    APPLICATION_JSON
 }

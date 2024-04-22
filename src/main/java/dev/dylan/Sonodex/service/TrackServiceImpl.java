@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TrackServiceImpl implements TrackService {
-
+    private final TrackRepository trackRepository;
     @Autowired
-    private TrackRepository trackRepository;
+    public TrackServiceImpl(TrackRepository trackRepository) {
+        this.trackRepository = trackRepository;
+    }
     @Override
-    public Track saveTrack(Track track) {
+    public Track addTrack(Track track) {
         return trackRepository.save(track);
     }
 }
