@@ -1,9 +1,7 @@
 package dev.dylan.Sonodex.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +20,7 @@ public class Artist {
     private Long id;
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "artists", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private Set<Track> tracks;
-
-
 }

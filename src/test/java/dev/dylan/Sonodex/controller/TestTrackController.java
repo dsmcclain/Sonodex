@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.http.MediaType;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,12 +57,22 @@ public class TestTrackController {
 
     @Test
     public void testGetAll() throws Exception {
-        MockHttpServletRequestBuilder builder = get("/tracks")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
+        Track track1 = Track.builder().name("test track").build();
+        Track track2 = Track.builder().name("test track 2").build();
 
-        ResultActions actions = mockMvc.perform(builder)
-                .andExpect(status().isOk());
+        Mockito.when(trackService.getAll()).thenReturn(List.of(track1, track2));
+
+        ResponseEntity<?> response = controller.getAll();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<Track> returnTracks = (List<Track>) response.getBody();
+        assert returnTracks != null;
+        assertEquals(returnTracks.size(), 2);
+        assertEquals("test track 2", returnTracks.getLast().getName());
+    }
+
+    @Test
+    public void testAddTrackWithArtists() {
 
     }
 }
