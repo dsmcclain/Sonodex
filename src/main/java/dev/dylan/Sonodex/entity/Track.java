@@ -21,6 +21,7 @@ public class Track {
     @Id
     @GeneratedValue
     private Long id;
+    private String name;
     private Long albumId;
     private LocalDate issueDate;
     private int duration;
