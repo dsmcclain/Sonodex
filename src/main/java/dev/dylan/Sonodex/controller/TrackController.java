@@ -2,6 +2,9 @@ package dev.dylan.Sonodex.controller;
 
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import java.util.Optional;
 @RequestMapping("/tracks")
 public class TrackController {
     private TrackService trackService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getPackageName());
 
     @Autowired
     public TrackController(TrackService trackService) {
@@ -35,8 +39,9 @@ public class TrackController {
     }
 
     @PostMapping
-    public ResponseEntity<Track> addTrack(@RequestBody Track track) {
+    public ResponseEntity<Track> addTrack(@Valid @RequestBody Track track) {
         Track newTrack = trackService.addTrack(track);
+        logger.info("new track created: " + newTrack.toString());
 
         return ResponseEntity.ok(newTrack);
     }

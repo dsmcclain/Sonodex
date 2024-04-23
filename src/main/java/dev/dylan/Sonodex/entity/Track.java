@@ -19,7 +19,7 @@ public class Track {
     private String name;
     private Long albumId;
     private LocalDate issueDate;
-    private int duration;
+    private String duration;
     private TrackMediaType trackMediaType;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -36,5 +36,18 @@ public class Track {
     public void addArtist(Artist artist) {
         this.artists.add(artist);
         artist.getTracks().add(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", albumId=" + albumId +
+                ", issueDate=" + issueDate +
+                ", duration=" + duration +
+                ", trackMediaType=" + trackMediaType +
+                ", artists=" + artists +
+                '}';
     }
 }

@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-@AutoConfigureMockMvc
 public class TestTrackController {
     @Mock
     TrackService trackService;

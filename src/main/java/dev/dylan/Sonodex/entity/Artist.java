@@ -21,6 +21,7 @@ public class Artist {
     private String name;
 
     @ManyToMany(mappedBy = "artists", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    //todo: improve this by creating a JSONView https://stackoverflow.com/questions/67886252/spring-boot-jpa-infinite-loop-many-to-many
     @JsonIgnore
     private Set<Track> tracks;
 }
