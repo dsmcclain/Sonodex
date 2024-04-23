@@ -1,6 +1,6 @@
 package dev.dylan.Sonodex.entity;
 
-public enum MediaType {
+public enum TrackMediaType {
     OGG,
     MP3,
     FLAC,

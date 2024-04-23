@@ -20,7 +20,7 @@ public class Track {
     private Long albumId;
     private LocalDate issueDate;
     private int duration;
-    private MediaType mediaType;
+    private TrackMediaType trackMediaType;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "ARTIST_TRACKS",
