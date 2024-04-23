@@ -11,4 +11,6 @@ public interface TrackService {
     List<Track> getAll();
 
     Optional<Track> getTrack(Long id);
+
+    boolean deleteTrack(Long id);
 }

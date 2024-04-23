@@ -15,15 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.http.MediaType;
-
 import java.util.List;
+import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -35,28 +30,8 @@ public class TestTrackController {
     @InjectMocks
     private TrackController controller;
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper mapper;
-
     @Test
-    public void testAddTrack() {
-        Track track = Track.builder().name("test track").build();
-        Mockito.when(trackService.addTrack(track)).thenReturn(track);
-
-        ResponseEntity<?> response = controller.addTrack(track);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        Track returnTrack = (Track) response.getBody();
-        assert returnTrack != null;
-        assertEquals("test track", returnTrack.getName());
-
-    }
-
-    @Test
-    public void testGetAll() throws Exception {
+    public void testGetAll() {
         Track track1 = Track.builder().name("test track").build();
         Track track2 = Track.builder().name("test track 2").build();
 
@@ -72,7 +47,52 @@ public class TestTrackController {
     }
 
     @Test
-    public void testAddTrackWithArtists() {
+    public void testGetTrackById() {
+        Track track = Track.builder().name("test track").build();
+        Mockito.when(trackService.getTrack(1L)).thenReturn(Optional.ofNullable(track));
 
+        ResponseEntity<?> response = controller.getTrack(1L);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+        Track returnTrack = (Track) response.getBody();
+        assert returnTrack != null;
+        assertEquals("test track", returnTrack.getName());
+    }
+
+    @Test
+    public void testGetTrackWithBadId() {
+        Mockito.when(trackService.getTrack(1L)).thenReturn(Optional.empty());
+        ResponseEntity<?> response = controller.getTrack(1L);
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void testAddTrack() {
+        Track track = Track.builder().name("test track").build();
+        Mockito.when(trackService.addTrack(track)).thenReturn(track);
+
+        ResponseEntity<?> response = controller.addTrack(track);
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Track returnTrack = (Track) response.getBody();
+        assert returnTrack != null;
+        assertEquals("test track", returnTrack.getName());
+    }
+
+    @Test
+    public void testDeleteTrack() {
+        Track.builder().name("test track").build();
+        Mockito.when(trackService.deleteTrack(1L)).thenReturn(true);
+
+        ResponseEntity<?> response = controller.deleteTrack(1L);
+        assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    public void testDeleteTrackWithBadId() {
+        Mockito.when(trackService.deleteTrack(1L)).thenReturn(false);
+
+        ResponseEntity<?> response = controller.deleteTrack(1L);
+        assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
     }
 }

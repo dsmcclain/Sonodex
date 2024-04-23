@@ -30,4 +30,10 @@ public class TrackServiceImpl implements TrackService {
     public Optional<Track> getTrack(Long id) {
         return trackRepository.findById(id);
     }
+
+    @Override
+    public boolean deleteTrack(Long id) {
+        int numberOfRecordsDeleted = trackRepository.customDeleteById(id);
+        return numberOfRecordsDeleted == 1;
+    }
 }
