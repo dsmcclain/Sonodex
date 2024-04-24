@@ -2,6 +2,7 @@ package dev.dylan.Sonodex.service;
 
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.entity.Track;
+import dev.dylan.Sonodex.entity.TrackMediaType;
 import dev.dylan.Sonodex.repository.TrackRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -37,6 +38,11 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public List<Track> getAll() {
         return new ArrayList<>(trackRepository.findAll());
+    }
+
+    @Override
+    public List<Track> getTracksByMediaType(TrackMediaType type) {
+       return new ArrayList<>(trackRepository.findByTrackMediaType(type));
     }
 
     @Override

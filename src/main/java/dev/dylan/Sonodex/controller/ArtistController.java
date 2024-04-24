@@ -4,6 +4,7 @@ import dev.dylan.Sonodex.JsonUtilities;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
 import jakarta.validation.Valid;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ArtistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> getAll() {
+    public ResponseEntity<String> getAll() {
 
         return ResponseEntity.ok(JsonUtilities.ArtistView(artistService.getAll()));
     }

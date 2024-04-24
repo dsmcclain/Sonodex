@@ -1,9 +1,12 @@
 package dev.dylan.Sonodex.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.dylan.Sonodex.dto.TrackDTO;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,7 +37,7 @@ public class TestTrackController {
     Track track = Track.builder().name("test track").build();
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws IOException {
         Track track2 = Track.builder().name("test track 2").build();
 
         Mockito.when(trackService.getAll()).thenReturn(List.of(track, track2));
@@ -42,7 +45,8 @@ public class TestTrackController {
         ResponseEntity<?> response = controller.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(((ArrayList<Track>) response.getBody()).size(), 2);
+        List trackResponse = new ObjectMapper().readValue((String) response.getBody(), List.class);
+        assertEquals(2, trackResponse.size());
     }
 
     @Test

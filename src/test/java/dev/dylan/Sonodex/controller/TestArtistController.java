@@ -33,7 +33,7 @@ public class TestArtistController {
     Artist artist = Artist.builder().name("test artist").build();
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws JsonProcessingException {
         Artist artist2 = Artist.builder().name("test artist 2").build();
 
         Mockito.when(artistService.getAll()).thenReturn(List.of(artist, artist2));
@@ -41,8 +41,9 @@ public class TestArtistController {
         ResponseEntity<?> response = controller.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        List artistResponse = new ObjectMapper().readValue((String) response.getBody(), List.class);
 
-        assertEquals(2, ((ArrayList<Artist>) response.getBody()).size());
+        assertEquals(2, artistResponse.size());
     }
 
     @Test

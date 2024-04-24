@@ -1,6 +1,7 @@
 package dev.dylan.Sonodex.controller;
 
 import dev.dylan.Sonodex.entity.Track;
+import dev.dylan.Sonodex.entity.TrackMediaType;
 import dev.dylan.Sonodex.service.TrackService;
 import dev.dylan.Sonodex.JsonUtilities;
 import jakarta.validation.Valid;
@@ -26,8 +27,13 @@ public class TrackController {
     }
 
     @GetMapping
-    public ResponseEntity<List<String>> getAll() {
+    public ResponseEntity<String> getAll() {
         return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getAll()));
+    }
+
+    @GetMapping("media-type/{mediaType}")
+    public ResponseEntity<String> getTracksByMediaType(@PathVariable("mediaType")TrackMediaType type) {
+        return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getTracksByMediaType(type)));
     }
 
     @GetMapping("/{id}")
