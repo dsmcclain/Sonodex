@@ -11,4 +11,5 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     @Modifying
     @Query(value = "DELETE FROM Track t where t.id = ?1")
     int customDeleteById(Long id);
+
 }

@@ -1,5 +1,6 @@
 package dev.dylan.Sonodex.controller;
 
+import dev.dylan.Sonodex.dto.TrackDTO;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
 import org.junit.jupiter.api.Test;
@@ -26,12 +27,13 @@ public class TestTrackController {
     @InjectMocks
     private TrackController controller;
 
+    Track track = Track.builder().name("test track").build();
+
     @Test
     public void testGetAll() {
-        Track track1 = Track.builder().name("test track").build();
         Track track2 = Track.builder().name("test track 2").build();
 
-        Mockito.when(trackService.getAll()).thenReturn(List.of(track1, track2));
+        Mockito.when(trackService.getAll()).thenReturn(List.of(track, track2));
 
         ResponseEntity<?> response = controller.getAll();
 
@@ -44,13 +46,12 @@ public class TestTrackController {
 
     @Test
     public void testGetTrackById() {
-        Track track = Track.builder().name("test track").build();
         Mockito.when(trackService.getTrack(1L)).thenReturn(Optional.ofNullable(track));
 
         ResponseEntity<?> response = controller.getTrack(1L);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        Track returnTrack = (Track) response.getBody();
+        TrackDTO returnTrack = (TrackDTO) response.getBody();
         assert returnTrack != null;
         assertEquals("test track", returnTrack.getName());
     }
@@ -64,7 +65,6 @@ public class TestTrackController {
 
     @Test
     public void testAddTrack() {
-        Track track = Track.builder().name("test track").build();
         Mockito.when(trackService.addTrack(track)).thenReturn(track);
 
         ResponseEntity<?> response = controller.addTrack(track);
@@ -76,8 +76,19 @@ public class TestTrackController {
     }
 
     @Test
+    public void testUpdateTrack() {
+        Track updatedTrack = Track.builder().name("an updated track").build();
+        Mockito.when(trackService.updateTrack(1L, updatedTrack)).thenReturn(Optional.ofNullable(updatedTrack));
+
+        ResponseEntity<?> response = controller.updateTrack(1L, updatedTrack);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        Track returnTrack = (Track) response.getBody();
+        assert returnTrack != null;
+        assertEquals(returnTrack.getName(), "an updated track");
+    }
+
+    @Test
     public void testDeleteTrack() {
-        Track.builder().name("test track").build();
         Mockito.when(trackService.deleteTrack(1L)).thenReturn(true);
 
         ResponseEntity<?> response = controller.deleteTrack(1L);

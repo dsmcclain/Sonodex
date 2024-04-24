@@ -12,5 +12,7 @@ public interface TrackService {
 
     Optional<Track> getTrack(Long id);
 
+    Optional<Track> updateTrack(Long id, Track track);
+
     boolean deleteTrack(Long id);
 }

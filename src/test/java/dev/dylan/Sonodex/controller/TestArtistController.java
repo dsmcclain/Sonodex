@@ -1,16 +1,15 @@
 package dev.dylan.Sonodex.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import dev.dylan.Sonodex.dto.ArtistDTO;
 import dev.dylan.Sonodex.entity.Artist;
-import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.ArtistService;
-import dev.dylan.Sonodex.service.TrackService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,19 +46,19 @@ public class TestArtistController {
     }
 
     @Test
-    public void testGetArtistById() {
+    public void testGetArtistById() throws JsonProcessingException {
         Mockito.when(artistService.getArtist(1L)).thenReturn(Optional.ofNullable(artist));
 
         ResponseEntity<?> response = controller.getArtist(1L);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        Artist returnArtist = (Artist) response.getBody();
+        ArtistDTO returnArtist = (ArtistDTO) response.getBody();
         assert returnArtist != null;
         assertEquals("test artist", returnArtist.getName());
     }
 
     @Test
-    public void testGetArtistWithBadId() {
+    public void testGetArtistWithBadId() throws JsonProcessingException {
         Mockito.when(artistService.getArtist(1L)).thenReturn(Optional.empty());
         ResponseEntity<?> response = controller.getArtist(1L);
         assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);

@@ -1,5 +1,6 @@
 package dev.dylan.Sonodex.controller;
 
+import dev.dylan.Sonodex.SonodexUtility;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
 import jakarta.validation.Valid;
@@ -16,30 +17,30 @@ import java.util.Optional;
 public class ArtistController {
     private ArtistService artistService;
 
-    @GetMapping
-    public ResponseEntity<List<Artist>> getAll() {
-        return ResponseEntity.ok(artistService.getAll());
-    }
-
     @Autowired
     public ArtistController(ArtistService artistService) {
         this.artistService = artistService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
+    public ResponseEntity<List<String>> getAll() {
+
+        return ResponseEntity.ok(SonodexUtility.ArtistView(artistService.getAll()));
+    }
+
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<?> getArtist(@PathVariable("id") Long id) {
         Optional<Artist> artistResponse = artistService.getArtist(id);
-        if(artistResponse.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No artist found with id: " + id);
-        else
-            return ResponseEntity.ok(artistResponse.get());
+        return artistResponse.<ResponseEntity<?>>map(
+                artist -> ResponseEntity.ok(SonodexUtility.ArtistView(artist))
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No artist found with id: " + id));
     }
 
     @PostMapping
-    public ResponseEntity<Artist> addArtist(@Valid @RequestBody Artist artist) {
+    public ResponseEntity<String> addArtist(@Valid @RequestBody Artist artist) {
         Artist newArtist = artistService.addArtist(artist);
 
-        return ResponseEntity.ok(newArtist);
+        return ResponseEntity.ok(SonodexUtility.ArtistView(newArtist));
     }
 
     @DeleteMapping("/{id}")

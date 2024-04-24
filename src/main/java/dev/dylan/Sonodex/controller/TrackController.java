@@ -1,5 +1,7 @@
 package dev.dylan.Sonodex.controller;
 
+import dev.dylan.Sonodex.SonodexUtility;
+import dev.dylan.Sonodex.dto.TrackDTO;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
 import jakarta.validation.Valid;
@@ -25,25 +27,32 @@ public class TrackController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Track>> getAll() {
-        return ResponseEntity.ok(trackService.getAll());
+    public ResponseEntity<List<String>> getAll() {
+        return ResponseEntity.ok(SonodexUtility.TrackView(trackService.getAll()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTrack(@PathVariable("id") Long id) {
         Optional<Track> trackResponse = trackService.getTrack(id);
-        if(trackResponse.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No track found with id: " + id);
-        else
-            return ResponseEntity.ok(trackResponse.get());
+        return trackResponse.<ResponseEntity<?>>map(
+                track -> ResponseEntity.ok(SonodexUtility.TrackView(track))
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No track found with id: " + id));
     }
 
     @PostMapping
-    public ResponseEntity<Track> addTrack(@Valid @RequestBody Track track) {
+    public ResponseEntity<String> addTrack(@Valid @RequestBody Track track) {
         Track newTrack = trackService.addTrack(track);
         logger.info("new track created: " + newTrack.toString());
 
-        return ResponseEntity.ok(newTrack);
+        return ResponseEntity.ok(SonodexUtility.TrackView(newTrack));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTrack(@PathVariable("id") Long id, @Valid @RequestBody Track track) {
+        Optional<Track> trackResponse = trackService.updateTrack(id, track);
+        return trackResponse.<ResponseEntity<?>>map(
+                value -> ResponseEntity.ok(SonodexUtility.TrackView(value))
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No track found with id: " + id));
     }
 
     @DeleteMapping("/{id}")
