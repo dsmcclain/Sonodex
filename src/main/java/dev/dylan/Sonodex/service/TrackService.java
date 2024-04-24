@@ -10,6 +10,7 @@ public interface TrackService {
     Track addTrack(Track track);
     List<Track> getAll();
     List<Track> getTracksByMediaType(TrackMediaType type);
+    List<Track> getTracksByArtistId(Long id);
     Optional<Track> getTrack(Long id);
     Optional<Track> updateTrack(Long id, Track track);
     boolean deleteTrack(Long id);

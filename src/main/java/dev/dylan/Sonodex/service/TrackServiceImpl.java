@@ -46,6 +46,10 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
+    public List<Track> getTracksByArtistId(Long id) {
+        return new ArrayList<>(trackRepository.findByArtists_Id(id));
+    }
+    @Override
     public Optional<Track> getTrack(Long id) {
         return trackRepository.findById(id);
     }

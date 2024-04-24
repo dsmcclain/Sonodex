@@ -32,10 +32,16 @@ public class TrackController {
     }
 
     @GetMapping("media-type/{mediaType}")
-    public ResponseEntity<String> getTracksByMediaType(@PathVariable("mediaType")TrackMediaType type) {
+    public ResponseEntity<String> getTracksByMediaType(@PathVariable("mediaType") TrackMediaType type) {
         return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getTracksByMediaType(type)));
     }
 
+    @GetMapping("/tracks-by-artist/{id}")
+    public ResponseEntity<String> getTracksByArtistId(@PathVariable("id") Long id) {
+        Optional<Track> trackLookup = trackService.getTrack(id);
+
+        return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getTracksByArtistId(id)));
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getTrack(@PathVariable("id") Long id) {
         Optional<Track> trackResponse = trackService.getTrack(id);

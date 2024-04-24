@@ -16,5 +16,6 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     @Query(value = "DELETE FROM Track t where t.id = ?1")
     int customDeleteById(Long id);
 
+    List<Track> findByArtists_Id(Long id);
     List<Track> findByTrackMediaType(TrackMediaType type);
 }
