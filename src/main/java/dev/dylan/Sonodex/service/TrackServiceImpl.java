@@ -1,5 +1,6 @@
 package dev.dylan.Sonodex.service;
 
+import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.repository.TrackRepository;
 import jakarta.persistence.EntityManager;
@@ -21,8 +22,15 @@ public class TrackServiceImpl implements TrackService {
     public TrackServiceImpl(TrackRepository trackRepository) {
         this.trackRepository = trackRepository;
     }
+
+    @Transactional
     @Override
     public Track addTrack(Track track) {
+        entityManager.persist(track);
+        for(Artist artist : track.getArtists()) {
+            entityManager.persist(artist);
+            track.addArtist(artist);
+        }
         return trackRepository.save(track);
     }
 

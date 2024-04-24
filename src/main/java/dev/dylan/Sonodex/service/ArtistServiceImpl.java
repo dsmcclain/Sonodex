@@ -44,6 +44,20 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
+    @Transactional
+    public Optional<Artist> updateArtist(Long id, Artist artist) {
+       Optional<Artist> oldArtist = getArtist(id);
+       if(oldArtist.isEmpty())
+           return oldArtist;
+       else {
+           artist.setId(id);
+           artist.setTracks(oldArtist.get().getTracks());
+           entityManager.merge(artist);
+           return Optional.of(artist);
+
+       }
+    }
+    @Override
     public boolean deleteArtist(Long id) {
         int numberOfRecordsDeleted = artistRepository.customDeleteById(id);
         return numberOfRecordsDeleted == 1;

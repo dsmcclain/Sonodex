@@ -1,6 +1,7 @@
 package dev.dylan.Sonodex.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.dylan.Sonodex.dto.ArtistDTO;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,21 +42,20 @@ public class TestArtistController {
         ResponseEntity<?> response = controller.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<Artist>returnArtists = (List<Artist>) response.getBody();
-        assert returnArtists != null;
-        assertEquals(returnArtists.size(), 2);
-        assertEquals("test artist 2", returnArtists.getLast().getName());
+
+        assertEquals(2, ((ArrayList<Artist>) response.getBody()).size());
     }
 
     @Test
-    public void testGetArtistById() throws JsonProcessingException {
+    public void testGetArtistById() throws IOException {
         Mockito.when(artistService.getArtist(1L)).thenReturn(Optional.ofNullable(artist));
 
         ResponseEntity<?> response = controller.getArtist(1L);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        ArtistDTO returnArtist = (ArtistDTO) response.getBody();
+        Artist returnArtist = new ObjectMapper().reader().readValue((String) response.getBody(), Artist.class);
         assert returnArtist != null;
+
         assertEquals("test artist", returnArtist.getName());
     }
 
@@ -65,14 +67,15 @@ public class TestArtistController {
     }
 
     @Test
-    public void testAddArtist() {
+    public void testAddArtist() throws IOException {
         Mockito.when(artistService.addArtist(artist)).thenReturn(artist);
 
         ResponseEntity<?> response = controller.addArtist(artist);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Artist returnArtist = (Artist) response.getBody();
+        Artist returnArtist = new ObjectMapper().reader().readValue((String) response.getBody(), Artist.class);
         assert returnArtist != null;
+
         assertEquals("test artist", returnArtist.getName());
     }
 

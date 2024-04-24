@@ -7,12 +7,8 @@ import java.util.Optional;
 
 public interface TrackService {
     Track addTrack(Track track);
-
     List<Track> getAll();
-
     Optional<Track> getTrack(Long id);
-
     Optional<Track> updateTrack(Long id, Track track);
-
     boolean deleteTrack(Long id);
 }

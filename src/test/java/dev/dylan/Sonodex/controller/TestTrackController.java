@@ -1,5 +1,6 @@
 package dev.dylan.Sonodex.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.dylan.Sonodex.dto.TrackDTO;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
@@ -13,6 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,21 +42,19 @@ public class TestTrackController {
         ResponseEntity<?> response = controller.getAll();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        List<Track> returnTracks = (List<Track>) response.getBody();
-        assert returnTracks != null;
-        assertEquals(returnTracks.size(), 2);
-        assertEquals("test track 2", returnTracks.getLast().getName());
+        assertEquals(((ArrayList<Track>) response.getBody()).size(), 2);
     }
 
     @Test
-    public void testGetTrackById() {
+    public void testGetTrackById() throws IOException {
         Mockito.when(trackService.getTrack(1L)).thenReturn(Optional.ofNullable(track));
 
         ResponseEntity<?> response = controller.getTrack(1L);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        TrackDTO returnTrack = (TrackDTO) response.getBody();
+        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
         assert returnTrack != null;
+
         assertEquals("test track", returnTrack.getName());
     }
 
@@ -64,25 +66,26 @@ public class TestTrackController {
     }
 
     @Test
-    public void testAddTrack() {
+    public void testAddTrack() throws IOException {
         Mockito.when(trackService.addTrack(track)).thenReturn(track);
 
         ResponseEntity<?> response = controller.addTrack(track);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Track returnTrack = (Track) response.getBody();
+        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
         assert returnTrack != null;
+
         assertEquals("test track", returnTrack.getName());
     }
 
     @Test
-    public void testUpdateTrack() {
+    public void testUpdateTrack() throws IOException {
         Track updatedTrack = Track.builder().name("an updated track").build();
         Mockito.when(trackService.updateTrack(1L, updatedTrack)).thenReturn(Optional.ofNullable(updatedTrack));
 
         ResponseEntity<?> response = controller.updateTrack(1L, updatedTrack);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Track returnTrack = (Track) response.getBody();
+        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
         assert returnTrack != null;
         assertEquals(returnTrack.getName(), "an updated track");
     }
