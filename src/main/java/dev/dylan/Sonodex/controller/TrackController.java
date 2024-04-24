@@ -1,8 +1,8 @@
 package dev.dylan.Sonodex.controller;
 
-import dev.dylan.Sonodex.service.JsonViewService;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.service.TrackService;
+import dev.dylan.Sonodex.JsonUtilities;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,25 +18,23 @@ import java.util.Optional;
 @RequestMapping(value = "/tracks", produces = "application/json")
 public class TrackController {
     private TrackService trackService;
-    private JsonViewService jsonViewService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getPackageName());
 
     @Autowired
-    public TrackController(TrackService trackService, JsonViewService jsonViewService) {
+    public TrackController(TrackService trackService) {
         this.trackService = trackService;
-        this.jsonViewService = jsonViewService;
     }
 
     @GetMapping
     public ResponseEntity<List<String>> getAll() {
-        return ResponseEntity.ok(jsonViewService.TrackView(trackService.getAll()));
+        return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getAll()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTrack(@PathVariable("id") Long id) {
         Optional<Track> trackResponse = trackService.getTrack(id);
         return trackResponse.<ResponseEntity<?>>map(
-                track -> ResponseEntity.ok(jsonViewService.TrackView(track))
+                track -> ResponseEntity.ok(JsonUtilities.TrackView(track))
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No track found with id: " + id));
     }
 
@@ -45,14 +43,14 @@ public class TrackController {
         Track newTrack = trackService.addTrack(track);
         logger.info("new track created: " + newTrack.toString());
 
-        return ResponseEntity.ok(jsonViewService.TrackView(newTrack));
+        return ResponseEntity.ok(JsonUtilities.TrackView(newTrack));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTrack(@PathVariable("id") Long id, @Valid @RequestBody Track track) {
         Optional<Track> trackResponse = trackService.updateTrack(id, track);
         return trackResponse.<ResponseEntity<?>>map(
-                value -> ResponseEntity.ok(jsonViewService.TrackView(value))
+                value -> ResponseEntity.ok(JsonUtilities.TrackView(value))
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No track found with id: " + id));
     }
 

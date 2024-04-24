@@ -1,6 +1,6 @@
 package dev.dylan.Sonodex.controller;
 
-import dev.dylan.Sonodex.service.JsonViewService;
+import dev.dylan.Sonodex.JsonUtilities;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
 import jakarta.validation.Valid;
@@ -16,25 +16,23 @@ import java.util.Optional;
 @RequestMapping(value =  "/artists", produces = "application/json")
 public class ArtistController {
     private ArtistService artistService;
-    private JsonViewService jsonViewService;
 
     @Autowired
-    public ArtistController(ArtistService artistService, JsonViewService jsonViewService) {
+    public ArtistController(ArtistService artistService) {
         this.artistService = artistService;
-        this.jsonViewService = jsonViewService;
     }
 
     @GetMapping
     public ResponseEntity<List<String>> getAll() {
 
-        return ResponseEntity.ok(jsonViewService.ArtistView(artistService.getAll()));
+        return ResponseEntity.ok(JsonUtilities.ArtistView(artistService.getAll()));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getArtist(@PathVariable("id") Long id) {
         Optional<Artist> artistResponse = artistService.getArtist(id);
         return artistResponse.<ResponseEntity<?>>map(
-                artist -> ResponseEntity.ok(jsonViewService.ArtistView(artist))
+                artist -> ResponseEntity.ok(JsonUtilities.ArtistView(artist))
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No artist found with id: " + id));
     }
 
@@ -42,14 +40,14 @@ public class ArtistController {
     public ResponseEntity<String> addArtist(@Valid @RequestBody Artist artist) {
         Artist newArtist = artistService.addArtist(artist);
 
-        return ResponseEntity.ok(jsonViewService.ArtistView(newArtist));
+        return ResponseEntity.ok(JsonUtilities.ArtistView(newArtist));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateArtist(@PathVariable("id") Long id, @Valid @RequestBody Artist artist) {
         Optional<Artist> artistResponse = artistService.updateArtist(id, artist);
         return artistResponse.<ResponseEntity<?>>map(
-                value -> ResponseEntity.ok(jsonViewService.ArtistView(artist))
+                value -> ResponseEntity.ok(JsonUtilities.ArtistView(artist))
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No artist found with id: " + id));
     }
 

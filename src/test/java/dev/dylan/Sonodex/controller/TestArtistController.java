@@ -2,7 +2,6 @@ package dev.dylan.Sonodex.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.dylan.Sonodex.dto.ArtistDTO;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
 import org.junit.jupiter.api.Test;
