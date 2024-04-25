@@ -31,6 +31,4 @@ public class Artist {
         tracks.add(track);
         track.getArtists().add(this);
     }
-
-
 }

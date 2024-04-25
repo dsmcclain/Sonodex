@@ -1,7 +1,9 @@
 package dev.dylan.Sonodex.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.dylan.Sonodex.entity.Track;
+import dev.dylan.Sonodex.entity.TrackMediaType;
 import dev.dylan.Sonodex.service.TrackService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,12 +53,42 @@ public class TestTrackController {
         ResponseEntity<?> response = controller.getTrack(1L);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
 
-        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
-        assert returnTrack != null;
-
-        assertEquals("test track", returnTrack.getName());
+        HashMap returnTrack = new ObjectMapper().readValue((response.getBody()).toString(), HashMap.class);
+        assertEquals(returnTrack.get("name"), "test track");
     }
 
+    @Test
+    public void testGetTrackByArtistId() throws JsonProcessingException {
+        Mockito.when(trackService.getTracksByArtistId(1L)).thenReturn(List.of(track));
+
+        ResponseEntity<?> response = controller.getTracksByArtistId(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List trackResponse = new ObjectMapper().readValue((String) response.getBody(), List.class);
+        assertEquals(1, trackResponse.size());
+    }
+
+    @Test
+    public void testGetTracksByYear() throws JsonProcessingException {
+        Mockito.when(trackService.getTracksByYear(2024)).thenReturn(List.of(track));
+
+        ResponseEntity<?> response = controller.getTracksByYear(2024);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List trackResponse = new ObjectMapper().readValue((String) response.getBody(), List.class);
+        assertEquals(1, trackResponse.size());
+    }
+
+    @Test
+    public void testGetTracksByMediaType() throws JsonProcessingException {
+        Mockito.when(trackService.getTracksByMediaType(TrackMediaType.MP3)).thenReturn(List.of(track));
+
+        ResponseEntity<?> response = controller.getTracksByMediaType(TrackMediaType.MP3);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List trackResponse = new ObjectMapper().readValue((String) response.getBody(), List.class);
+        assertEquals(1, trackResponse.size());
+    }
     @Test
     public void testGetTrackWithBadId() {
         Mockito.when(trackService.getTrack(1L)).thenReturn(Optional.empty());
@@ -70,10 +103,10 @@ public class TestTrackController {
         ResponseEntity<?> response = controller.addTrack(track);
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
+        HashMap returnTrack = new ObjectMapper().readValue((response.getBody()).toString(), HashMap.class);
         assert returnTrack != null;
 
-        assertEquals("test track", returnTrack.getName());
+        assertEquals(returnTrack.get("name"), "test track");
     }
 
     @Test
@@ -83,9 +116,8 @@ public class TestTrackController {
 
         ResponseEntity<?> response = controller.updateTrack(1L, updatedTrack);
         assertEquals(response.getStatusCode(), HttpStatus.OK);
-        Track returnTrack = new ObjectMapper().reader().readValue((String) response.getBody(), Track.class);
-        assert returnTrack != null;
-        assertEquals(returnTrack.getName(), "an updated track");
+        HashMap returnTrack = new ObjectMapper().readValue((response.getBody()).toString(), HashMap.class);
+        assertEquals(returnTrack.get("name"), "an updated track");
     }
 
     @Test

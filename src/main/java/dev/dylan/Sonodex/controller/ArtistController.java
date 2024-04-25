@@ -1,6 +1,6 @@
 package dev.dylan.Sonodex.controller;
 
-import dev.dylan.Sonodex.JsonUtilities;
+import dev.dylan.Sonodex.view.JsonUtilities;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.service.ArtistService;
 import jakarta.validation.Valid;

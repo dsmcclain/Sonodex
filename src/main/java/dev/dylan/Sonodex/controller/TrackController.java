@@ -3,7 +3,7 @@ package dev.dylan.Sonodex.controller;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.entity.TrackMediaType;
 import dev.dylan.Sonodex.service.TrackService;
-import dev.dylan.Sonodex.JsonUtilities;
+import dev.dylan.Sonodex.view.JsonUtilities;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

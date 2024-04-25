@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +77,17 @@ public class TestArtistController {
         assert returnArtist != null;
 
         assertEquals("test artist", returnArtist.getName());
+    }
+
+    @Test
+    public void testUpdateArtist() throws IOException {
+        Artist updatedArtist = Artist.builder().name("an updated artist").build();
+        Mockito.when(artistService.updateArtist(1L, updatedArtist)).thenReturn(Optional.ofNullable(updatedArtist));
+
+        ResponseEntity<?> response = controller.updateArtist(1L, updatedArtist);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        HashMap returnTrack = new ObjectMapper().readValue((response.getBody()).toString(), HashMap.class);
+        assertEquals(returnTrack.get("name"), "an updated artist");
     }
 
     @Test

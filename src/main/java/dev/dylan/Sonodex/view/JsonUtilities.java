@@ -1,11 +1,10 @@
-package dev.dylan.Sonodex;
+package dev.dylan.Sonodex.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.entity.Track;
-import dev.dylan.Sonodex.view.JsonViewProfiles;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
