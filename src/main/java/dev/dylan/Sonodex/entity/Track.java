@@ -1,14 +1,13 @@
 package dev.dylan.Sonodex.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import dev.dylan.Sonodex.pricing.PricingProvider;
 import dev.dylan.Sonodex.view.JsonViewProfiles;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,5 +56,10 @@ public class Track {
                 ", trackMediaType=" + trackMediaType +
                 ", artists=" + artists +
                 '}';
+    }
+
+    @JsonView({JsonViewProfiles.Track.class})
+    public String price() {
+       return PricingProvider.getPrice(id);
     }
 }

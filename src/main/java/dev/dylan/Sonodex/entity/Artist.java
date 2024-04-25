@@ -1,13 +1,11 @@
 package dev.dylan.Sonodex.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.dylan.Sonodex.view.JsonViewProfiles;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.*;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,4 +31,6 @@ public class Artist {
         tracks.add(track);
         track.getArtists().add(this);
     }
+
+
 }
