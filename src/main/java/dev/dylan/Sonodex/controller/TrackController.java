@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,6 +41,12 @@ public class TrackController {
 
         return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getTracksByArtistId(id)));
     }
+
+    @GetMapping("/tracks-by-year/{year}")
+    public ResponseEntity<String> getTracksByYear(@PathVariable("year") int year) {
+        return ResponseEntity.ok(JsonUtilities.TrackView(trackService.getTracksByYear(year)));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getTrack(@PathVariable("id") Long id) {
         Optional<Track> trackResponse = trackService.getTrack(id);

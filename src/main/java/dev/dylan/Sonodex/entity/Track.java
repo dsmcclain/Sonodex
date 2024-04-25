@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +24,9 @@ public class Track {
     private Long id;
     private String name;
     private Long albumId;
-    private LocalDate issueDate;
     private String duration;
     private TrackMediaType trackMediaType;
+    private LocalDate issueDate;
 
     @Valid
     @JsonView(JsonViewProfiles.Track.class)

@@ -11,6 +11,7 @@ public interface TrackService {
     List<Track> getAll();
     List<Track> getTracksByMediaType(TrackMediaType type);
     List<Track> getTracksByArtistId(Long id);
+    List<Track> getTracksByYear(int year);
     Optional<Track> getTrack(Long id);
     Optional<Track> updateTrack(Long id, Track track);
     boolean deleteTrack(Long id);

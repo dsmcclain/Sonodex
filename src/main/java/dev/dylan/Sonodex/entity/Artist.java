@@ -24,7 +24,7 @@ public class Artist {
     private String name;
 
     @Valid
-    @JsonView(JsonViewProfiles.Artist.class) // only render tracks when rendering the Artist view
+    @JsonView({JsonViewProfiles.Artist.class}) // only render tracks when rendering the Artist view
     @ManyToMany(mappedBy = "artists", cascade = CascadeType.PERSIST)
     @Builder.Default
     private Set<Track> tracks = new HashSet<>();

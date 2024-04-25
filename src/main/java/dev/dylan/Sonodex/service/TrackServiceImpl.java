@@ -10,9 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class TrackServiceImpl implements TrackService {
@@ -43,6 +42,14 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public List<Track> getTracksByMediaType(TrackMediaType type) {
        return new ArrayList<>(trackRepository.findByTrackMediaType(type));
+    }
+
+    @Override
+    public List<Track> getTracksByYear(int year) {
+        LocalDate beginDate = LocalDate.of(year, 1, 1);
+        LocalDate endDate = LocalDate.of(year, 12, 31);
+
+        return new ArrayList<>(trackRepository.findAllByIssueDateBetween(beginDate, endDate));
     }
 
     @Override

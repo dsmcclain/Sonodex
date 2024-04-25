@@ -1,6 +1,5 @@
 package dev.dylan.Sonodex.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.entity.TrackMediaType;
@@ -9,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Getter
 @Setter
