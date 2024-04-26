@@ -28,7 +28,7 @@ public class Track {
     private LocalDate issueDate;
 
     @Valid
-    @JsonView(JsonViewProfiles.Track.class)
+    @JsonView(JsonViewProfiles.Track.class) // only render artists when rendering the Track view
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "ARTIST_TRACKS",
         joinColumns = {

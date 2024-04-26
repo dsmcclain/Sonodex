@@ -8,12 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface TrackRepository extends JpaRepository<Track, Long> {
-    //customized to return the deleted record versus void
+    //run customized delete query in order to return the deleted record versus void
     @Modifying
     @Query(value = "DELETE FROM Track t where t.id = ?1")
     int customDeleteById(Long id);

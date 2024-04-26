@@ -1,8 +1,8 @@
 package dev.dylan.Sonodex.service;
 
-import dev.dylan.Sonodex.entity.Artist;
 import dev.dylan.Sonodex.entity.Track;
 import dev.dylan.Sonodex.entity.TrackMediaType;
+import dev.dylan.Sonodex.repository.ArtistRepository;
 import dev.dylan.Sonodex.repository.TrackRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,23 +15,22 @@ import java.util.*;
 
 @Service
 public class TrackServiceImpl implements TrackService {
-    private final TrackRepository trackRepository;
+    private TrackRepository trackRepository;
+    private ArtistRepository artistRepository;
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
-    public TrackServiceImpl(TrackRepository trackRepository) {
+    public TrackServiceImpl(TrackRepository trackRepository, ArtistRepository artistRepository) {
         this.trackRepository = trackRepository;
+        this.artistRepository = artistRepository;
     }
 
     @Transactional
     @Override
     public Track addTrack(Track track) {
-        entityManager.persist(track);
-        for(Artist artist : track.getArtists()) {
-            entityManager.persist(artist);
-            track.addArtist(artist);
-        }
-        return trackRepository.save(track);
+        Track newTrack = trackRepository.save(track);
+        artistRepository.saveAll(track.getArtists());
+        return newTrack;
     }
 
     @Override
